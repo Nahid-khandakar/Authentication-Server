@@ -3,10 +3,13 @@ const app = express()
 const port = process.env.PORT || 5000
 
 //middleware
+const bcrypt = require('bcryptjs');
+const saltRounds = 10;
 const cors = require('cors')
 require('dotenv').config()
 app.use(cors())
 app.use(express.json());
+
 
 
 // userDB
@@ -27,10 +30,16 @@ async function run() {
 
         const userCollection = client.db("authenticationDB").collection("user-collection");
 
-        app.post('/userdata', async (req, res) => {
+        app.post('/signup', async (req, res) => {
             const userData = req.body
+            console.log(userData)
+
+
+            const hashPassword = await bcrypt.hash(req.body.password, saltRounds)
             const doc = {
-                userData: userData
+                email: req.body.email,
+                phone: req.body.phoneNumber,
+                password: hashPassword
             }
             const result = await userCollection.insertOne(doc)
             res.send(result)
