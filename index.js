@@ -32,7 +32,7 @@ async function run() {
 
         app.post('/signup', async (req, res) => {
             const userData = req.body
-            console.log(userData)
+            // console.log(userData)
 
 
             const hashPassword = await bcrypt.hash(req.body.password, saltRounds)
@@ -45,6 +45,43 @@ async function run() {
             res.send(result)
 
         })
+
+
+
+        app.post('/login', async (req, res) => {
+
+            try {
+                const userData = req.body
+                //console.log('post login', userData)
+
+                const query = { email: req.body.email }
+                const user = await userCollection.findOne(query)
+                //console.log("come form login", user)
+
+                if (user) {
+                    const cmp = await bcrypt.compare(req.body.password, user.password)
+
+                    if (cmp) {
+                        console.log('good')
+                        res.status(200)
+                    }
+                    else {
+                        console.log('bad')
+                        res.send('wrong password')
+                    }
+                } else {
+                    res.send('wrong username or password')
+                }
+
+            }
+            catch (error) {
+                console.log(error)
+            }
+
+        })
+
+
+
 
     } finally {
         //await client.close();
