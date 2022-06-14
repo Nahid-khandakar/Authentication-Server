@@ -33,15 +33,16 @@ async function run() {
 
         //signup control
         app.post('/signup', async (req, res) => {
+
+
             const userData = req.body
-            // console.log(userData)
+            const inputEmail = req.body.email
             const query = { email: req.body.email }
             const user = await userCollection.findOne(query)
-            console.log('from sign up', user)
-            console.log('email', user?.email, typeof user?.email)
-            console.log('req body email', req.body.email, typeof req.body.email)
+            console.log(user)
+            // const checkEmail = user.email
 
-            if (req.body.email !== user?.email) {
+            if (user == null) {
 
                 const hashPassword = await bcrypt.hash(req.body.password, saltRounds)
                 const doc = {
@@ -50,14 +51,17 @@ async function run() {
                     password: hashPassword
                 }
                 const result = await userCollection.insertOne(doc)
-                res.send(result)
+                res.send("user created", result)
                 console.log('new user created')
 
             }
             else {
+
                 console.log('user exist')
                 res.send('user already exist')
+
             }
+
 
         })
 
@@ -77,11 +81,11 @@ async function run() {
                     const cmp = await bcrypt.compare(req.body.password, user.password)
 
                     if (cmp) {
-                        //console.log('good')
-                        res.status(200)
+                        console.log('good')
+                        res.send('password matched')
                     }
                     else {
-                        //console.log('bad')
+                        console.log('bad')
                         res.send('wrong password')
                     }
                 } else {
