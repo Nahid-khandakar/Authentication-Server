@@ -27,7 +27,15 @@ async function run() {
 
         const userCollection = client.db("authenticationDB").collection("user-collection");
 
+        app.post('/userdata', async (req, res) => {
+            const userData = req.body
+            const doc = {
+                userData: userData
+            }
+            const result = await userCollection.insertOne(doc)
+            res.send(result)
 
+        })
 
     } finally {
         //await client.close();
