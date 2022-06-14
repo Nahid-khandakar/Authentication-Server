@@ -51,7 +51,7 @@ async function run() {
                     password: hashPassword
                 }
                 const result = await userCollection.insertOne(doc)
-                res.send("user created", result)
+                res.status(200).json({ 'success': true, 'result': result })
                 console.log('new user created')
 
             }
