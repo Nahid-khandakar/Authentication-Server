@@ -30,24 +30,39 @@ async function run() {
 
         const userCollection = client.db("authenticationDB").collection("user-collection");
 
+
+        //signup control
         app.post('/signup', async (req, res) => {
             const userData = req.body
             // console.log(userData)
+            const query = { email: req.body.email }
+            const user = await userCollection.findOne(query)
+            console.log('from sign up', user)
+            console.log('email', user?.email, typeof user?.email)
+            console.log('req body email', req.body.email, typeof req.body.email)
 
+            if (req.body.email !== user?.email) {
 
-            const hashPassword = await bcrypt.hash(req.body.password, saltRounds)
-            const doc = {
-                email: req.body.email,
-                phone: req.body.phoneNumber,
-                password: hashPassword
+                const hashPassword = await bcrypt.hash(req.body.password, saltRounds)
+                const doc = {
+                    email: req.body.email,
+                    phone: req.body.phoneNumber,
+                    password: hashPassword
+                }
+                const result = await userCollection.insertOne(doc)
+                res.send(result)
+                console.log('new user created')
+
             }
-            const result = await userCollection.insertOne(doc)
-            res.send(result)
+            else {
+                console.log('user exist')
+                res.send('user already exist')
+            }
 
         })
 
 
-
+        //login control
         app.post('/login', async (req, res) => {
 
             try {
@@ -62,11 +77,11 @@ async function run() {
                     const cmp = await bcrypt.compare(req.body.password, user.password)
 
                     if (cmp) {
-                        console.log('good')
+                        //console.log('good')
                         res.status(200)
                     }
                     else {
-                        console.log('bad')
+                        //console.log('bad')
                         res.send('wrong password')
                     }
                 } else {
