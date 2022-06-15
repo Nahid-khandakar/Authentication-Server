@@ -11,10 +11,6 @@ app.use(cors())
 app.use(express.json());
 
 
-
-// userDB
-// f9I7Gwgg8F0ELs0B
-
 //mongoDB connection
 
 
@@ -133,6 +129,28 @@ async function run() {
             const result = await userInformation.deleteOne(query)
             res.send(result)
         })
+
+        //update a user data
+        app.put('/userinfo/:id', async (req, res) => {
+            const id = req.params.id
+            const userinfo = req.body
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    name: userinfo.name,
+                    address: userinfo.address,
+                    birthDate: userinfo.birth,
+                    state: userinfo.state,
+                    age: userinfo.age,
+                    pin: userinfo.pin
+                },
+            };
+            const result = await userInformation.updateOne(filter, updateDoc, options)
+            res.send(result)
+        })
+
+
 
 
     } finally {
