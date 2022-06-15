@@ -21,8 +21,6 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        console.log('mongodb with node curd')
-
 
         const userCollection = client.db("authenticationDB").collection("user-collection");
         const userInformation = client.db("authenticationDB").collection("user-information");
@@ -36,7 +34,6 @@ async function run() {
             const inputEmail = req.body.email
             const query = { email: req.body.email }
             const user = await userCollection.findOne(query)
-            console.log(user)
             // const checkEmail = user.email
 
             if (user == null) {
@@ -49,12 +46,11 @@ async function run() {
                 }
                 const result = await userCollection.insertOne(doc)
                 res.status(200).json({ 'success': true, 'result': result })
-                console.log('new user created')
+
 
             }
             else {
 
-                console.log('user exist')
                 res.status(409).send('user already exist')
 
             }
@@ -68,21 +64,20 @@ async function run() {
 
             try {
                 const userData = req.body
-                //console.log('post login', userData)
+
 
                 const query = { email: req.body.email }
                 const user = await userCollection.findOne(query)
-                //console.log("come form login", user)
 
                 if (user) {
                     const cmp = await bcrypt.compare(req.body.password, user.password)
 
                     if (cmp) {
-                        console.log('good')
+
                         res.status(200).json({ 'success': true })
                     }
                     else {
-                        console.log('bad')
+
                         res.status(403).send('wrong password')
                     }
                 } else {
@@ -99,7 +94,7 @@ async function run() {
         //post user information
         app.post('/create', async (req, res) => {
             const userInfo = req.body
-            console.log(userInfo)
+
             const doc = {
                 name: req.body.name,
                 address: req.body.address,
