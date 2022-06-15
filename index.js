@@ -34,7 +34,7 @@ async function run() {
             const inputEmail = req.body.email
             const query = { email: req.body.email }
             const user = await userCollection.findOne(query)
-            // const checkEmail = user.email
+
 
             if (user == null) {
 
