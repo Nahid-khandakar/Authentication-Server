@@ -29,6 +29,7 @@ async function run() {
 
 
         const userCollection = client.db("authenticationDB").collection("user-collection");
+        const userInformation = client.db("authenticationDB").collection("user-information");
 
 
         //signup control
@@ -97,6 +98,23 @@ async function run() {
                 console.log(error)
             }
 
+        })
+
+        //post user information
+        app.post('/create', async (req, res) => {
+            const userInfo = req.body
+            console.log(userInfo)
+            const doc = {
+                name: req.body.name,
+                address: req.body.address,
+                birthDate: req.body.birth,
+                state: req.body.state,
+                age: req.body.age,
+                pin: req.body.pin
+            }
+            const result = await userInformation.insertOne(doc)
+
+            res.send(result)
         })
 
 
