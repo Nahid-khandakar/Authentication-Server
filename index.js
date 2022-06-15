@@ -55,7 +55,7 @@ async function run() {
             else {
 
                 console.log('user exist')
-                res.send('user already exist')
+                res.status(409).send('user already exist')
 
             }
 
@@ -79,14 +79,14 @@ async function run() {
 
                     if (cmp) {
                         console.log('good')
-                        res.send('password matched')
+                        res.status(200).json({ 'success': true })
                     }
                     else {
                         console.log('bad')
-                        res.send('wrong password')
+                        res.status(403).send('wrong password')
                     }
                 } else {
-                    res.send('wrong username or password')
+                    res.status(403).send('wrong username or password')
                 }
 
             }
