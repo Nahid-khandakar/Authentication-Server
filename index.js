@@ -45,7 +45,7 @@ async function run() {
                     password: hashPassword
                 }
                 const result = await userCollection.insertOne(doc)
-                res.status(200).json({ 'success': true, 'result': result })
+                res.status(200).json({ 'success': true, 'result': result, 'email': inputEmail })
 
 
             }
@@ -64,8 +64,7 @@ async function run() {
 
             try {
                 const userData = req.body
-
-
+                const userEmail = req.body.email
                 const query = { email: req.body.email }
                 const user = await userCollection.findOne(query)
 
@@ -74,7 +73,7 @@ async function run() {
 
                     if (cmp) {
 
-                        res.status(200).json({ 'success': true })
+                        res.status(200).json({ 'success': true, 'email': userEmail })
                     }
                     else {
 
