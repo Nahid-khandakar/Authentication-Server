@@ -118,6 +118,13 @@ async function run() {
         })
 
 
+        //find all user information
+        app.get('/userinfo', async (req, res) => {
+            const query = {}
+            const cursor = userInformation.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+        })
 
 
     } finally {
